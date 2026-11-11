@@ -13,6 +13,7 @@ test("manifest exposes four hotkey workflows without host permissions", async ()
 
   assert.equal(manifest.manifest_version, 3);
   assert.equal(manifest.version, "1.4.0");
+  assert.equal(manifest.minimum_chrome_version, "121");
   assert.deepEqual(Object.keys(manifest.commands).sort(), [
     "add-to-unfinished",
     "choose-group-for-current",

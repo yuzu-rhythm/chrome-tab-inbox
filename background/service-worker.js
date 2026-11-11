@@ -1,5 +1,6 @@
 import {
   READING_LIST_ALARM_NAME,
+  TAB_EXPIRY_ALARM_NAME,
   TMP_GROUP_COLOR,
   TMP_GROUP_TITLE
 } from "../core/constants.js";
@@ -8,6 +9,7 @@ import { groupTitleKey } from "../core/group-title.js";
 import { InboxManager } from "../core/inbox-manager.js";
 import { describeError, logger } from "../core/logging.js";
 import { TabGroupManager } from "../core/tab-group-manager.js";
+import { TabExpiryManager } from "../core/tab-expiry-manager.js";
 import { TemporaryInboxManager } from "../core/temporary-inbox-manager.js";
 import { ReadingListInboxSource } from "../sources/reading-list-source.js";
 
@@ -41,6 +43,12 @@ const temporaryInboxManager = new TemporaryInboxManager({
   tabsApi: api?.tabs,
   settingsProvider: () => inboxManager.getSettings(),
   groupManager,
+  logger
+});
+const tabExpiryManager = new TabExpiryManager({
+  tabsApi: api?.tabs,
+  tabGroupsApi: api?.tabGroups,
+  settingsProvider: () => inboxManager.getSettings(),
   logger
 });
 const NEW_TAB_SETTLE_DELAY_MS = 350;
@@ -208,6 +216,19 @@ async function ensureReadingListAlarm() {
   }
 }
 
+async function ensureTabExpiryAlarm() {
+  try {
+    const existing = await api.alarms.get(TAB_EXPIRY_ALARM_NAME);
+    if (!existing) {
+      await api.alarms.create(TAB_EXPIRY_ALARM_NAME, { periodInMinutes: 1 });
+    }
+    return true;
+  } catch (error) {
+    logger.error("tab expiry alarm setup failed", describeError(error));
+    return false;
+  }
+}
+
 function registerListener(event, callback) {
   if (event && typeof event.addListener === "function") {
     event.addListener(callback);
@@ -223,6 +244,8 @@ registerListener(api?.runtime?.onInstalled, (details) => {
       reason: `onInstalled:${details?.reason ?? "unknown"}`
     });
     await ensureReadingListAlarm();
+    await ensureTabExpiryAlarm();
+    await tabExpiryManager.scan();
   });
 });
 
@@ -249,6 +272,8 @@ registerListener(api?.runtime?.onStartup, () => {
     try {
       await inboxManager.initialize({ scan: true, reason: "onStartup" });
       await ensureReadingListAlarm();
+      await ensureTabExpiryAlarm();
+      await tabExpiryManager.scan();
       return await temporaryInboxManager.captureStartupTabs();
     } finally {
       startupCaptureInProgress = false;
@@ -317,6 +342,10 @@ registerListener(api?.tabs?.onRemoved, (tabId) => {
 });
 
 registerListener(api?.alarms?.onAlarm, (alarm) => {
+  if (alarm?.name === TAB_EXPIRY_ALARM_NAME) {
+    fire("tab-expiry.alarm", () => tabExpiryManager.scan());
+    return;
+  }
   if (alarm?.name !== READING_LIST_ALARM_NAME) {
     return;
   }
@@ -493,4 +522,6 @@ registerListener(api?.tabs?.onDetached, () => {
 fire("worker-start", async () => {
   await inboxManager.initialize({ scan: true, reason: "worker-start" });
   await ensureReadingListAlarm();
+  await ensureTabExpiryAlarm();
+  await tabExpiryManager.scan();
 });

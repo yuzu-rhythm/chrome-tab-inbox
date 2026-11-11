@@ -5,6 +5,7 @@ export const TMP_GROUP_COLOR = "grey";
 export const MAX_PRESET_GROUPS = 9;
 export const READING_LIST_SOURCE = "chrome-reading-list";
 export const READING_LIST_ALARM_NAME = "unfinished-inbox-reading-list-scan";
+export const TAB_EXPIRY_ALARM_NAME = "unfinished-inbox-tab-expiry";
 
 export const DEFAULT_PRESET_GROUPS = Object.freeze([
   Object.freeze({
