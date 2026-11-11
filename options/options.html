@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>まだやっていない - 設定</title>
+    <link rel="stylesheet" href="options.css">
+  </head>
+  <body>
+    <main class="settings-shell">
+      <header class="page-heading">
+        <span class="orange-dot" aria-hidden="true"></span>
+        <div>
+          <p class="eyebrow">設定</p>
+          <h1>まだやっていない</h1>
+        </div>
+      </header>
+
+      <section class="settings-card">
+        <h2>Mobile Inbox</h2>
+        <p class="section-description">スマートフォンから同期したReading Listを、MacのInboxへ取り込みます。</p>
+
+        <label class="setting-row" for="reading-list-enabled">
+          <span>
+            <strong>Chrome Reading Listから取り込む</strong>
+            <small>新しく追加された未読項目を自動で確認します。</small>
+          </span>
+          <input id="reading-list-enabled" type="checkbox">
+        </label>
+
+        <div class="manual-import">
+          <div>
+            <strong>初回処理</strong>
+            <small>Bridge開始前からある項目は、自動では取り込みません。</small>
+          </div>
+          <button id="import-existing" type="button" class="secondary-button">既存の未読Reading Listを取り込む</button>
+        </div>
+      </section>
+
+      <section class="settings-card">
+        <h2>Queue behavior</h2>
+        <label class="setting-row" for="remove-after-import">
+          <span>
+            <strong>取り込み成功後Reading Listから削除</strong>
+            <small>タブ作成・グループ化・確認・バッジ更新の後でだけ削除します。</small>
+          </span>
+          <input id="remove-after-import" type="checkbox">
+        </label>
+      </section>
+
+      <section class="settings-card tmp-card">
+        <h2>Temporary Inbox</h2>
+        <p class="section-description">短時間だけ置いておくタブを、灰色のTMPグループで受け取ります。</p>
+
+        <label class="setting-row" for="tmp-enabled">
+          <span>
+            <strong>TMPを有効にする</strong>
+            <small>一時置き場としてTMPを使えるようにします。</small>
+          </span>
+          <input id="tmp-enabled" type="checkbox">
+        </label>
+
+        <label class="setting-row" for="tmp-capture-new-tabs">
+          <span>
+            <strong>新しいタブをTMPへ受け取る</strong>
+            <small>新規タブを一時置き場へ集めます。</small>
+          </span>
+          <input id="tmp-capture-new-tabs" type="checkbox">
+        </label>
+
+        <label class="setting-row" for="tmp-capture-startup">
+          <span>
+            <strong>起動時のアクティブタブをTMPへ受け取る</strong>
+            <small>各通常ウィンドウのアクティブな未分類タブだけを対象にします。</small>
+          </span>
+          <input id="tmp-capture-startup" type="checkbox">
+        </label>
+      </section>
+
+      <section class="settings-card preset-card">
+        <div class="card-heading">
+          <div>
+            <h2>Preset groups</h2>
+            <p class="section-description">よく使うグループを1〜9番に登録します。パレットではTMPの次にこの順で表示します。</p>
+          </div>
+          <span id="preset-count" class="card-count">0 / 9</span>
+        </div>
+        <div id="preset-list" class="preset-list" aria-live="polite"></div>
+        <button id="add-preset" type="button" class="secondary-button add-button">＋ プリセットを追加</button>
+        <p id="preset-error" class="inline-error" role="alert" hidden></p>
+      </section>
+
+      <section class="settings-card compact-card">
+        <h2>Groups &amp; hotkeys</h2>
+        <p class="section-description">未処理Inboxは即操作し、その他の名前付きグループは選択パレットから自由に作成・表示します。</p>
+        <p class="shortcut-note">Option+Shift+Gで振り分け、Option+Gで全グループOverviewを開きます。</p>
+        <dl class="shortcut-list">
+          <div>
+            <dt>未処理を開く</dt>
+            <dd><kbd id="shortcut-open-unfinished">確認中…</kbd></dd>
+          </div>
+          <div>
+            <dt>未処理へ送る</dt>
+            <dd><kbd id="shortcut-add-unfinished">確認中…</kbd></dd>
+          </div>
+          <div>
+            <dt>グループを選んで開く</dt>
+            <dd><kbd id="shortcut-open-group">確認中…</kbd></dd>
+          </div>
+          <div>
+            <dt>グループを選んで送る</dt>
+            <dd><kbd id="shortcut-choose-group">確認中…</kbd></dd>
+          </div>
+        </dl>
+        <p class="immutable-note"><code>chrome://extensions/shortcuts</code> で推奨キーを設定してください。未処理のReading List取り込み先はオレンジ色の「まだやっていない」です。</p>
+      </section>
+
+      <div class="bottom-actions">
+        <button id="save-settings" type="button" class="primary-button">設定を保存</button>
+        <p id="options-status" class="status" role="status" aria-live="polite"></p>
+      </div>
+
+      <p class="help-note">既存項目の取り込みは明示的に押したときだけ行われます。同期には時間がかかる場合があります。</p>
+    </main>
+    <script src="options.js"></script>
+  </body>
+</html>

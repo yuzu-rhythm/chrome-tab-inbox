@@ -1,0 +1,67 @@
+{
+  "manifest_version": 3,
+  "name": "まだやっていない",
+  "version": "1.4.0",
+  "description": "新しいタブをtmpで受け取り、Raycast風パレットからプリセットグループへ振り分ける個人用タブInboxです。",
+  "minimum_chrome_version": "120",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "permissions": [
+    "alarms",
+    "notifications",
+    "readingList",
+    "storage",
+    "tabGroups",
+    "tabs"
+  ],
+  "background": {
+    "service_worker": "background/service-worker.js",
+    "type": "module"
+  },
+  "action": {
+    "default_title": "まだやっていない",
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "options_ui": {
+    "page": "options/options.html",
+    "open_in_tab": true
+  },
+  "commands": {
+    "add-to-unfinished": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+6",
+        "mac": "Alt+Shift+T"
+      },
+      "description": "現在のタブを未処理専用ウィンドウへ送る"
+    },
+    "open-unfinished": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+5"
+      },
+      "description": "未処理専用ウィンドウを開く",
+      "global": true
+    },
+    "choose-group-for-current": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+8",
+        "mac": "Alt+Shift+G"
+      },
+      "description": "現在のタブをプリセットまたは名前付きグループへ振り分ける"
+    },
+    "open-group-picker": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+7"
+      },
+      "description": "全グループOverviewを開いてタイトル検索する",
+      "global": true
+    }
+  }
+}
